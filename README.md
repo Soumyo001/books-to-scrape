@@ -40,26 +40,35 @@ python3 -m venv .venv
 source .venv/bin/activate
 python -m pip install -r requirements.txt
 ```
+Confirm the spider is available:
+
+```bash
+scrapy list
+```
+
+Expected spider name: `books`.
 
 ## 5. Environment Setup
 
-Project settings are defined in `books_scraper/settings.py`.
+The project uses `books_scraper/settings.py` for Scrapy configuration and `scrapy.cfg` for the settings module and Scrapyd deployment target.
 
-The main configurations are:
+Important settings:
 
-- `ITEM_PIPELINES`: Enables data cleaning and SQLite storage.
-- `FEEDS`: Configures JSON, CSV, and XML exports.
-- `BOOKS_DATABASE_PATH`: Sets the SQLite database location.
-- `BOOKS_OUTPUT_DIR`: Sets the export directory.
+| Setting | Purpose |
+| --- | --- |
+| `ROBOTSTXT_OBEY = True` | Follows the website's available robots.txt rules. |
+| `CONCURRENT_REQUESTS_PER_DOMAIN = 1` | Limits concurrent requests to the target domain. |
+| `DOWNLOAD_DELAY = 1` | Adds a delay between requests. |
+| `ITEM_PIPELINES` | Enables `books_scraper.pipelines.BookDataPipeline`. |
+| `FEEDS` | Defines the JSON, CSV, and XML exports with overwrite enabled. |
+| `FEED_EXPORT_ENCODING = "utf-8"` | Writes UTF-8 exports. |
 
-Default local output locations:
+The following environment variables are optional:
 
-```text
-books.json
-books.csv
-books.xml
-data/books.db
-```
+| Variable | Local default | Docker value |
+| --- | --- | --- |
+| `BOOKS_DATABASE_PATH` | `<project>/data/books.db` | `/app/data/books.db` |
+| `BOOKS_OUTPUT_DIR` | `.` (current working directory) | `/app/data` |
 
 The `scrapy.cfg` file contains the Scrapy settings module and Scrapyd deployment address.
 
