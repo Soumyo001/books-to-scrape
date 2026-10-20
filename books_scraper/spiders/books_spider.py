@@ -1,4 +1,5 @@
 import scrapy, random
+from books_scraper.items import BookItem
 
 class BooksSpider(scrapy.Spider):
     """Discover all book categories from homepage"""
@@ -14,9 +15,7 @@ class BooksSpider(scrapy.Spider):
             ".side_categories > ul > li > ul > li > a[href]"
         )
         if len(category_links) < 5:
-            raise ValueError(
-                f"Found only {len(category_links)} categories. at least 5 required."
-            )
+            raise ValueError(f"Found only {len(category_links)} categories. at least 5 required.")
 
         categories = []
 
@@ -146,3 +145,28 @@ class BooksSpider(scrapy.Spider):
             return
 
         yield self._request_next_category(response)
+
+    def parse_book(self, response, category_name):
+        """Extract the six required fields from a selected book page."""
+
+        title = response.css("div.product_main h1::text").get()
+        price = response.css("div.product_main p.price_color::text").get()
+        availability = response.css("div.product_main p.availability").xpath("normalize-space(.)").get()
+        image_src = response.css("div.item.active img::attr(src)").get()
+
+        if not all((title, price, availability, image_src)):
+            self.logger.error(f"Missing required product data on {response.url}")
+            raise ValueError(f"Required product data missing on {response.url}")
+
+        item = BookItem(
+            title=title,
+            price=price,
+            availability=availability,
+            product_url=response.url,
+            image_url=response.urljoin(image_src),
+            category=category_name,
+        )
+
+        self.logger.info(f"Extracted book '{title}' from category '{category_name}'")
+
+        yield item
