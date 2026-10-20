@@ -15,6 +15,8 @@ class BookDataPipeline:
     )
 
     def __init__(self):
+        """set initial db values"""
+
         self.connection = None
         self.items_saved = 0
 
@@ -93,7 +95,12 @@ class BookDataPipeline:
             raise DropItem("Book price must be finite and non-negative")
 
         item["price"] = price
-        item["availability"] = item["availability"].casefold().startswith("in stock")
+        status = item["availability"].casefold()
+
+        item["availability"] = re.fullmatch(
+            r"in stock(?: \(\d+ available\))?",
+            status,
+        ) is not None
 
         try:
             self.connection.execute(
