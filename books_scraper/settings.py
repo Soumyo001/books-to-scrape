@@ -100,19 +100,21 @@ BOOK_FIELDS = [
     "category",
 ]
 
+BOOKS_OUTPUT_DIR = Path(os.environ.get("BOOKS_OUTPUT_DIR", "."))
+
 FEEDS = {
-    "books.json": {
+    str(BOOKS_OUTPUT_DIR / "books.json"): {
         "format": "json",
         "fields": BOOK_FIELDS,
         "indent": 4,
         "overwrite": True,
     },
-    "books.csv": {
+    str(BOOKS_OUTPUT_DIR / "books.csv"): {
         "format": "csv",
         "fields": BOOK_FIELDS,
         "overwrite": True,
     },
-    "books.xml": {
+    str(BOOKS_OUTPUT_DIR / "books.xml"): {
         "format": "xml",
         "fields": BOOK_FIELDS,
         "overwrite": True,

@@ -2,7 +2,8 @@ FROM python:3.12-slim
 
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
-    BOOKS_DATABASE_PATH=/app/data/books.db
+    BOOKS_DATABASE_PATH=/app/data/books.db \
+    BOOKS_OUTPUT_DIR=/app/data
 
 WORKDIR /app
 
