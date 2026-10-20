@@ -7,6 +7,9 @@
 #     https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
 #     https://docs.scrapy.org/en/latest/topics/spider-middleware.html
 
+import os
+from pathlib import Path
+
 BOT_NAME = "books_scraper"
 
 SPIDER_MODULES = ["books_scraper.spiders"]
@@ -86,3 +89,9 @@ ITEM_PIPELINES = {
 
 # Set settings whose default value is deprecated to a future-proof value
 FEED_EXPORT_ENCODING = "utf-8"
+
+# SQLite database location. Docker can override this with an environment variable.
+BOOKS_DATABASE_PATH = os.environ.get(
+    "BOOKS_DATABASE_PATH",
+    str(Path(__file__).resolve().parent.parent / "data" / "books.db"),
+)
