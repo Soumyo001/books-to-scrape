@@ -1,0 +1,14 @@
+.venv/
+.git/
+__pycache__/
+*.pyc
+*.egg-info/
+build/
+dist/
+data/
+*.db
+books.json
+books.csv
+books.xml
+step*.log
+step*_preview.json

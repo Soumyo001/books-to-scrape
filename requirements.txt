@@ -1,0 +1,3 @@
+Scrapy==2.19.0
+scrapyd==1.6.0
+scrapyd-client==2.0.3
