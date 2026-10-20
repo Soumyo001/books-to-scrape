@@ -228,32 +228,35 @@ The database path can be changed using the `BOOKS_DATABASE_PATH` environment var
 ## 11. Architecture Diagram (Text or Image)
 
 ```text
-Books to Scrape Homepage
-          |
-          v
-Discover Book Categories
-          |
-          v
-Select 5–10 Random Categories
-          |
-          v
-Visit Category Pages and Collect Book URLs
-          |
-          v
-Select 5 Random Books per Eligible Category
-          |
-          v
-Extract Book Information
-          |
-          v
-     Scrapy Item
-          |
-          v
-    Item Pipeline
-    /           \
-   v             v
-SQLite       Feed Exports
-Database     JSON / CSV / XML
+Books to Scrape homepage
+         |
+         v
+Discover category names and URLs (parse)
+         |
+         v
+Choose a random target of 5-10 categories
+         |
+         v
+Visit each category and paginate (parse_category)
+         |
+         +--> Fewer than 5 unique books? --> Try another category
+         |
+         v
+Randomly select 5 book URLs per eligible category
+         |
+         v
+Visit product pages (parse_book)
+         |
+         v
+BookItem (6 fields)
+         |
+         v
+BookDataPipeline: clean, validate, insert into SQLite
+         |
+         +--> SQLite: data/books.db
+         |
+         v
+Scrapy Feed Exports: books.json / books.csv / books.xml
 ```
 
 ## 12. Folder Structure
