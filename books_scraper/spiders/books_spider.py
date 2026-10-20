@@ -133,7 +133,7 @@ class BooksSpider(scrapy.Spider):
             self.logger.warning(f"Category {category_name} has only {book_count} books. trying a replacement")
 
         if len(self.eligible_categories) >= self.target_category_count:
-            self.logger.info(f"Target reached: {len(self.eligible_categories)} eligible categories")
+            self.logger.info(f"Target reached: {self.target_category_count} eligible categories")
 
             for category in self.eligible_categories.values():
                 self.logger.info(
@@ -142,6 +142,20 @@ class BooksSpider(scrapy.Spider):
                     len(category["book_urls"]),
                 )
 
+                selected_book_urls = random.sample(category["book_urls"], 5)
+                self.logger.info(
+                    "Selected 5 books from category: %s",
+                    category["name"],
+                )
+
+                for book_url in selected_book_urls:
+                    yield response.follow(
+                        book_url,
+                        callback=self.parse_book,
+                        cb_kwargs={
+                            "category_name": category["name"],
+                        },
+                    )
             return
 
         yield self._request_next_category(response)
