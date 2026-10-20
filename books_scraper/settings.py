@@ -90,6 +90,35 @@ ITEM_PIPELINES = {
 # Set settings whose default value is deprecated to a future-proof value
 FEED_EXPORT_ENCODING = "utf-8"
 
+
+BOOK_FIELDS = [
+    "title",
+    "price",
+    "availability",
+    "product_url",
+    "image_url",
+    "category",
+]
+
+FEEDS = {
+    "books.json": {
+        "format": "json",
+        "fields": BOOK_FIELDS,
+        "indent": 4,
+        "overwrite": True,
+    },
+    "books.csv": {
+        "format": "csv",
+        "fields": BOOK_FIELDS,
+        "overwrite": True,
+    },
+    "books.xml": {
+        "format": "xml",
+        "fields": BOOK_FIELDS,
+        "overwrite": True,
+    },
+}
+
 # SQLite database location. Docker can override this with an environment variable.
 BOOKS_DATABASE_PATH = os.environ.get(
     "BOOKS_DATABASE_PATH",

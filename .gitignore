@@ -222,3 +222,6 @@ __marimo__/
 data/
 step*.log
 step*.json
+*.xml
+*.csv
+books.json
